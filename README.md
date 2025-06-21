@@ -1,7 +1,6 @@
-# ![Logo](assets/manifest-wide.png)
+# Orderbook with MagicBlock Ephemeral Rollups
 
-*The Unlimited Orderbook*
-
+The Unlimited Orderbook
 
 [![codecov](https://codecov.io/gh/CKS-Systems/manifest/graph/badge.svg?token=PJ3Y2BVMM8)](https://codecov.io/gh/CKS-Systems/manifest)
 [![Code Review - Rust](https://github.com/CKS-Systems/manifest/actions/workflows/ci-code-review-rust.yml/badge.svg)](https://github.com/CKS-Systems/manifest/actions/workflows/ci-code-review-rust.yml)
@@ -36,7 +35,7 @@ Read [The Orderbook Manifesto](https://manifest.trade/whitepaper.pdf)
 | Composable wrapper                                      | No                 | No                 | Yes                                   |
 | Capital Efficient                                       | No                 | No                 | Yes                                   |
 
-### Details:
+### Details
 
 - Cranks were originally used in serum to address the need for solana programs to identify all accounts before landing on chain. This has become obsolete now that orderbooks pack all data into a predictable account.
 - No trading fees forever on Manifest.
@@ -85,11 +84,12 @@ Reverse orders are a special type of order available on Manifest designed to rep
 
 ### Building
 
-```
+```rust
 cargo build-sbf
 ```
 
 ### Open Questions
+
 - Is tickless a good idea? This inverts time priority since it makes the most recent order able to provide negligible price improvement. This could disrupt behavior near mid and lead to unforeseen patterns.
 - Is global lock contention going to be a problem? Global provides capital efficiency that will be attractive to traders, but the extra lock contention for landing transactions, not only for placing a global, but also added to anyone who might match with it, may be problematic. There is a possibility that some markets may have restrictions on global usage to protect the land rates of normal traders.
 
@@ -97,23 +97,28 @@ cargo build-sbf
 
 ### Program Test
 
-```
+```rust
 cargo test-sbf
 ```
 
 ### Typescript client test
 
-```
+```bash
 sh local-validator-test.sh
 ```
+
 ## Resources
+
 ### Client SDK
+
   [NPM Package](https://www.npmjs.com/package/@cks-systems/manifest-sdk)
 
 ### Audit
+
 [View Report](https://www.manifest.trade/audit.pdf)
 
 ### Formal Verification
+
 Instructions for how to run formal verification are in [Certora_README](https://github.com/CKS-Systems/manifest/blob/main/Certora_README.md)
 
 From a high level, 4 sets of properties were formally verified
@@ -129,9 +134,11 @@ are only enabled with the certora feature, but that is so the verification can
 go beyond proving invariants at the end and do it on intermediate steps.
 
 ### Tip Jar
+
   B6dmr2UAn2wgjdm3T4N1Vjd8oPYRRTguByW7AEngkeL6
 
 ### Debugging
+
 A fork of solana explorer with insruction decoding and fill log parsing has been made in
 [this repo](https://github.com/CKS-Systems/explorer/tree/master) which is hosted at
 [explorer.manifest.trade](https://explorer.manifest.trade/). Due to the lack of updates from anchor and hacky
