@@ -1,6 +1,0 @@
-{
-       "assertMessages":{},
-       "rules": {
-            "rule_cancel_order_ask": "SUCCESS"
-       }
-}
