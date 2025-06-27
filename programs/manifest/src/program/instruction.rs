@@ -162,6 +162,45 @@ pub enum ManifestInstruction {
     #[account(12, writable, optional, name = "global", desc = "Global account")]
     #[account(13, writable, optional, name = "global_vault", desc = "Global vault")]
     SwapV2 = 13,
+
+    /// Delegate market account and vaults to ephemeral rollup
+    #[account(0, writable, signer, name = "payer", desc = "Payer")]
+    #[account(1, name = "system_program", desc = "System program")]
+    #[account(2, writable, name = "market", desc = "Market account to delegate")]
+    #[account(3, name = "owner_program", desc = "Owner program (Manifest)")]
+    #[account(4, writable, name = "base_vault", desc = "Base vault PDA to delegate")]
+    #[account(5, writable, name = "quote_vault", desc = "Quote vault PDA to delegate")]
+    #[account(6, name = "base_mint", desc = "Base mint for vault validation")]
+    #[account(7, name = "quote_mint", desc = "Quote mint for vault validation")]
+    #[account(8, writable, name = "market_delegation_buffer", desc = "Market delegation buffer")]
+    #[account(9, writable, name = "market_delegation_record", desc = "Market delegation record")]
+    #[account(10, writable, name = "market_delegation_metadata", desc = "Market delegation metadata")]
+    #[account(11, writable, name = "base_vault_delegation_buffer", desc = "Base vault delegation buffer")]
+    #[account(12, writable, name = "base_vault_delegation_record", desc = "Base vault delegation record")]
+    #[account(13, writable, name = "base_vault_delegation_metadata", desc = "Base vault delegation metadata")]
+    #[account(14, writable, name = "quote_vault_delegation_buffer", desc = "Quote vault delegation buffer")]
+    #[account(15, writable, name = "quote_vault_delegation_record", desc = "Quote vault delegation record")]
+    #[account(16, writable, name = "quote_vault_delegation_metadata", desc = "Quote vault delegation metadata")]
+    #[account(17, name = "delegation_program", desc = "MagicBlock delegation program")]
+    DelegateMarket = 14,
+
+    /// Undelegate market account and vaults from ephemeral rollup
+    #[account(0, writable, signer, name = "payer", desc = "Payer")]
+    #[account(1, writable, name = "market", desc = "Market account to undelegate")]
+    #[account(2, writable, name = "base_vault", desc = "Base vault PDA to undelegate")]
+    #[account(3, writable, name = "quote_vault", desc = "Quote vault PDA to undelegate")]
+    #[account(4, name = "magic_context", desc = "MagicBlock context account")]
+    #[account(5, name = "magic_program", desc = "MagicBlock program")]
+    UndelegateMarket = 15,
+
+    /// Commit market and vault state to base layer without undelegating
+    #[account(0, writable, signer, name = "payer", desc = "Payer")]
+    #[account(1, writable, name = "market", desc = "Market account to commit")]
+    #[account(2, writable, name = "base_vault", desc = "Base vault PDA to commit")]
+    #[account(3, writable, name = "quote_vault", desc = "Quote vault PDA to commit")]
+    #[account(4, name = "magic_context", desc = "MagicBlock context account")]
+    #[account(5, name = "magic_program", desc = "MagicBlock program")]
+    CommitMarket = 16,
 }
 
 impl ManifestInstruction {
@@ -172,7 +211,7 @@ impl ManifestInstruction {
 
 #[test]
 fn test_instruction_serialization() {
-    let num_instructions: u8 = 13;
+    let num_instructions: u8 = 16;
     for i in 0..=255 {
         let instruction: ManifestInstruction = match ManifestInstruction::try_from(i) {
             Ok(j) => {

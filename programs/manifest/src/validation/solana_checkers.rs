@@ -23,6 +23,12 @@ impl<'a, 'info> Program<'a, 'info> {
         )?;
         Ok(Self { info })
     }
+
+    /// Create a Program wrapper without validating the program ID
+    /// Used for external programs like MagicBlock delegation program
+    pub fn new_any(info: &'a AccountInfo<'info>) -> Result<Program<'a, 'info>, ProgramError> {
+        Ok(Self { info })
+    }
 }
 
 impl<'a, 'info> AsRef<AccountInfo<'info>> for Program<'a, 'info> {

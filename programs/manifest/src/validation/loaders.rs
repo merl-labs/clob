@@ -890,3 +890,139 @@ impl<'a, 'info> GlobalCleanContext<'a, 'info> {
         })
     }
 }
+
+/// DelegateMarket account infos
+pub(crate) struct DelegateMarketContext<'a, 'info> {
+    pub payer: Signer<'a, 'info>,
+    pub system_program: Program<'a, 'info>,
+    pub market: ManifestAccountInfo<'a, 'info, MarketFixed>,
+    pub owner_program: Program<'a, 'info>,
+    pub base_vault: &'a AccountInfo<'info>,
+    pub quote_vault: &'a AccountInfo<'info>,
+    pub base_mint: MintAccountInfo<'a, 'info>,
+    pub quote_mint: MintAccountInfo<'a, 'info>,
+    pub market_delegation_buffer: &'a AccountInfo<'info>,
+    pub market_delegation_record: &'a AccountInfo<'info>,
+    pub market_delegation_metadata: &'a AccountInfo<'info>,
+    pub base_vault_delegation_buffer: &'a AccountInfo<'info>,
+    pub base_vault_delegation_record: &'a AccountInfo<'info>,
+    pub base_vault_delegation_metadata: &'a AccountInfo<'info>,
+    pub quote_vault_delegation_buffer: &'a AccountInfo<'info>,
+    pub quote_vault_delegation_record: &'a AccountInfo<'info>,
+    pub quote_vault_delegation_metadata: &'a AccountInfo<'info>,
+    pub delegation_program: Program<'a, 'info>,
+}
+
+impl<'a, 'info> DelegateMarketContext<'a, 'info> {
+    pub fn load(accounts: &'a [AccountInfo<'info>]) -> Result<Self, ProgramError> {
+        let account_iter: &mut Iter<AccountInfo<'info>> = &mut accounts.iter();
+
+        let payer: Signer = Signer::new(next_account_info(account_iter)?)?;
+        let system_program: Program =
+            Program::new(next_account_info(account_iter)?, &system_program::id())?;
+        let market: ManifestAccountInfo<MarketFixed> =
+            ManifestAccountInfo::<MarketFixed>::new(next_account_info(account_iter)?)?;
+        let owner_program: Program = Program::new(next_account_info(account_iter)?, &crate::ID)?;
+        let base_vault: &AccountInfo<'info> = next_account_info(account_iter)?;
+        let quote_vault: &AccountInfo<'info> = next_account_info(account_iter)?;
+        let base_mint: MintAccountInfo = MintAccountInfo::new(next_account_info(account_iter)?)?;
+        let quote_mint: MintAccountInfo = MintAccountInfo::new(next_account_info(account_iter)?)?;
+        let market_delegation_buffer: &AccountInfo<'info> = next_account_info(account_iter)?;
+        let market_delegation_record: &AccountInfo<'info> = next_account_info(account_iter)?;
+        let market_delegation_metadata: &AccountInfo<'info> = next_account_info(account_iter)?;
+        let base_vault_delegation_buffer: &AccountInfo<'info> = next_account_info(account_iter)?;
+        let base_vault_delegation_record: &AccountInfo<'info> = next_account_info(account_iter)?;
+        let base_vault_delegation_metadata: &AccountInfo<'info> = next_account_info(account_iter)?;
+        let quote_vault_delegation_buffer: &AccountInfo<'info> = next_account_info(account_iter)?;
+        let quote_vault_delegation_record: &AccountInfo<'info> = next_account_info(account_iter)?;
+        let quote_vault_delegation_metadata: &AccountInfo<'info> = next_account_info(account_iter)?;
+        let delegation_program: Program = Program::new_any(next_account_info(account_iter)?)?;
+
+        Ok(Self {
+            payer,
+            system_program,
+            market,
+            owner_program,
+            base_vault,
+            quote_vault,
+            base_mint,
+            quote_mint,
+            market_delegation_buffer,
+            market_delegation_record,
+            market_delegation_metadata,
+            base_vault_delegation_buffer,
+            base_vault_delegation_record,
+            base_vault_delegation_metadata,
+            quote_vault_delegation_buffer,
+            quote_vault_delegation_record,
+            quote_vault_delegation_metadata,
+            delegation_program,
+        })
+    }
+}
+
+/// UndelegateMarket account infos
+pub(crate) struct UndelegateMarketContext<'a, 'info> {
+    pub payer: Signer<'a, 'info>,
+    pub market: ManifestAccountInfo<'a, 'info, MarketFixed>,
+    pub base_vault: &'a AccountInfo<'info>,
+    pub quote_vault: &'a AccountInfo<'info>,
+    pub magic_context: &'a AccountInfo<'info>,
+    pub magic_program: Program<'a, 'info>,
+}
+
+impl<'a, 'info> UndelegateMarketContext<'a, 'info> {
+    pub fn load(accounts: &'a [AccountInfo<'info>]) -> Result<Self, ProgramError> {
+        let account_iter: &mut Iter<AccountInfo<'info>> = &mut accounts.iter();
+
+        let payer: Signer = Signer::new(next_account_info(account_iter)?)?;
+        let market: ManifestAccountInfo<MarketFixed> =
+            ManifestAccountInfo::<MarketFixed>::new(next_account_info(account_iter)?)?;
+        let base_vault: &AccountInfo<'info> = next_account_info(account_iter)?;
+        let quote_vault: &AccountInfo<'info> = next_account_info(account_iter)?;
+        let magic_context: &AccountInfo<'info> = next_account_info(account_iter)?;
+        let magic_program: Program = Program::new_any(next_account_info(account_iter)?)?;
+
+        Ok(Self {
+            payer,
+            market,
+            base_vault,
+            quote_vault,
+            magic_context,
+            magic_program,
+        })
+    }
+}
+
+/// CommitMarket account infos
+pub(crate) struct CommitMarketContext<'a, 'info> {
+    pub payer: Signer<'a, 'info>,
+    pub market: ManifestAccountInfo<'a, 'info, MarketFixed>,
+    pub base_vault: &'a AccountInfo<'info>,
+    pub quote_vault: &'a AccountInfo<'info>,
+    pub magic_context: &'a AccountInfo<'info>,
+    pub magic_program: Program<'a, 'info>,
+}
+
+impl<'a, 'info> CommitMarketContext<'a, 'info> {
+    pub fn load(accounts: &'a [AccountInfo<'info>]) -> Result<Self, ProgramError> {
+        let account_iter: &mut Iter<AccountInfo<'info>> = &mut accounts.iter();
+
+        let payer: Signer = Signer::new(next_account_info(account_iter)?)?;
+        let market: ManifestAccountInfo<MarketFixed> =
+            ManifestAccountInfo::<MarketFixed>::new(next_account_info(account_iter)?)?;
+        let base_vault: &AccountInfo<'info> = next_account_info(account_iter)?;
+        let quote_vault: &AccountInfo<'info> = next_account_info(account_iter)?;
+        let magic_context: &AccountInfo<'info> = next_account_info(account_iter)?;
+        let magic_program: Program = Program::new_any(next_account_info(account_iter)?)?;
+
+        Ok(Self {
+            payer,
+            market,
+            base_vault,
+            quote_vault,
+            magic_context,
+            magic_program,
+        })
+    }
+}

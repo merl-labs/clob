@@ -182,6 +182,26 @@ pub struct GlobalCleanupLog {
     pub amount_deposited: GlobalAtoms,
 }
 
+#[repr(C)]
+#[derive(Clone, Copy, Zeroable, Pod, ShankAccount)]
+pub struct DelegateMarketLog {
+    pub market: Pubkey,
+    pub update_frequency_ms: u64,
+    pub time_limit: u64,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy, Zeroable, Pod, ShankAccount)]
+pub struct UndelegateMarketLog {
+    pub market: Pubkey,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy, Zeroable, Pod, ShankAccount)]
+pub struct CommitMarketLog {
+    pub market: Pubkey,
+}
+
 pub trait Discriminant {
     fn discriminant() -> [u8; 8];
 }
@@ -219,6 +239,9 @@ const GLOBAL_DEPOSIT_LOG_DISCRIMINANT: [u8; 8] = [16, 26, 72, 1, 145, 232, 182, 
 const GLOBAL_WITHDRAW_LOG_DISCRIMINANT: [u8; 8] = [206, 118, 67, 64, 124, 109, 157, 201];
 const GLOBAL_EVICT_LOG_DISCRIMINANT: [u8; 8] = [250, 180, 155, 38, 98, 223, 82, 223];
 const GLOBAL_CLEANUP_LOG_DISCRIMINANT: [u8; 8] = [193, 249, 115, 186, 42, 126, 196, 82];
+const DELEGATE_MARKET_LOG_DISCRIMINANT: [u8; 8] = [101, 45, 78, 123, 89, 156, 234, 67];
+const UNDELEGATE_MARKET_LOG_DISCRIMINANT: [u8; 8] = [202, 90, 156, 246, 178, 67, 123, 134];
+const COMMIT_MARKET_LOG_DISCRIMINANT: [u8; 8] = [55, 134, 89, 178, 234, 123, 67, 201];
 
 discriminant!(
     CreateMarketLog,
@@ -282,4 +305,19 @@ discriminant!(
     GlobalCleanupLog,
     GLOBAL_CLEANUP_LOG_DISCRIMINANT,
     test_global_cleanup_log
+);
+discriminant!(
+    DelegateMarketLog,
+    DELEGATE_MARKET_LOG_DISCRIMINANT,
+    test_delegate_market_log
+);
+discriminant!(
+    UndelegateMarketLog,
+    UNDELEGATE_MARKET_LOG_DISCRIMINANT,
+    test_undelegate_market_log
+);
+discriminant!(
+    CommitMarketLog,
+    COMMIT_MARKET_LOG_DISCRIMINANT,
+    test_commit_market_log
 );
